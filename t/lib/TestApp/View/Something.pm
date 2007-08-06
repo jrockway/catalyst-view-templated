@@ -9,7 +9,7 @@ sub _render {
     my $self = shift;
     my $template = shift;
     my $stash = shift;
-
+    
     return freeze({ $template => $stash });
 }
 
