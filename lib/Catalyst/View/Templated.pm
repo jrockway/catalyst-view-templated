@@ -52,7 +52,7 @@ sub template {
     }
 
     # hopefully they're using the new $c->view->template
-    $template ||= $self->context->stash->{$self->_ident()};
+    $template = $self->context->stash->{$self->_ident()};
     
     # if that's empty, get the template the old way, $c->stash->{template}
     $template ||= $self->context->stash->{template};

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 use Test::MockObject;
 use Storable qw/thaw/;
 
@@ -71,3 +71,9 @@ is($a, $b, 'a == b');
 is($b, $c, 'b == c');
 is($c, $d, 'c == d');
 is_deeply thaw($a), { template => { %$stash } }, 'correct data';
+
+# now try with a fresh view
+$view = TestApp::View::Something->COMPONENT($catalyst);
+$stash = { foo => 'bar' };
+my $e = $catalyst->view->render;
+is_deeply thaw($e), { test => $stash}, 'empty config still works';
