@@ -33,15 +33,13 @@ View::Templated makes all (template-based) Catalyst views work the same way:
 
 =head1 METHODS
 
-=cut
-
 =head2 template([$template])
 
 Set the template to C<$template>, or return the current template
 is C<$template> is undefined.
 
 =cut
-my $i  =3;
+
 sub template {
     my ($self, $template) = @_;
     
@@ -92,7 +90,10 @@ You can also omit C<$c>.  If the first arg is a reference, it
 will be treated as C<$c>.  If it's not, then it will be treated
 as the name of the template to render.  
 
-(Supplying no arguments at all is also legal.)
+If you only want to supply C<$args>, pass C<undef> as the first
+argument, before C<$args>.
+
+Supplying no arguments at all is also legal.
 
 Old style:
 
@@ -102,7 +103,10 @@ New style:
 
    $c->view('TT')->render('template', { args => 'here' });
    $c->view('TT')->render('template'); # no args
-   $c->view('TT')->render;
+
+   $c->view('TT')->template('template');
+   $c->view('TT')->render(undef, { args => 'here' });
+   $c->view('TT')->render; # no args
 
 =cut
 
@@ -134,13 +138,13 @@ sub _do_render {
 
 =head1 IMPLEMENTING A SUBCLASS
 
-All you need to do is implement new for your app, and implement a
+All you need to do is implement a new method (for setup) and a
 C<_render> method that accepts a template name, a hashref of
-paramaters, and a hashref of arguments (optional, passed from
-C<render> by the user), and returns the rendered template.  This class
-will handle converting the stash to a hashref for you, so you don't
-need to worry about getting the context, base, req, res, etc.  Just
-render what you're given.
+paramaters, and a hashref of arguments (optional, passed to C<render>
+by the user), and returns the rendered template.  This class will
+handle converting the stash to a hashref for you, so you don't need to
+worry about getting the context, base, req, res, etc.  Just render
+with what you're given.
 
 Example:
 
@@ -151,6 +155,7 @@ Example:
       my $self = $class->next::method($c, $args);
   
       $self->{engine} = MyTempalate->new($args);
+      return $self;
    }
 
    sub _render {
