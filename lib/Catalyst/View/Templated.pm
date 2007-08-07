@@ -174,6 +174,7 @@ with what you're given.
 Example:
 
    package Catalyst::View::MyTemplate;
+   use base 'Catalyst::View::Templated';
 
    sub new {
       my ($class, $c, $args) = @_;
