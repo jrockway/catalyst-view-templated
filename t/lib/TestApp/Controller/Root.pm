@@ -15,4 +15,10 @@ sub template_detach :Local {
     $c->detach($c->view('View::Something'));
 }
 
+sub action_detach :Local {
+    my ($self, $c) = @_;
+    $c->stash(action => 'detach');    
+    $c->detach($c->view('View::Something'));
+}
+
 1;

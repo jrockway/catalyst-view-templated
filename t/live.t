@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More tests => 4;
 use Storable qw/thaw/;
 
 use FindBin qw($Bin);
@@ -21,3 +21,8 @@ my $content = $mech->content;
 is thaw($content)->{hello_world}{hello}, 'world',
   'got correct content when calling template via detach';
 
+$mech->get_ok('http://localhost/action_detach');
+$content = $mech->content;
+
+is thaw($content)->{action_detach}{action}, 'detach',
+  'used action name as template name ok';
