@@ -14,5 +14,6 @@ build_requires 'Test::WWW::Mechanize::Catalyst';
 build_requires 'ok';
 build_requires 'Storable';
 build_requires 'Test::MockObject';
+build_requires 'Path::Class';
 
 WriteAll();

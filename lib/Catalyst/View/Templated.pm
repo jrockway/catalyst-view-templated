@@ -16,8 +16,11 @@ Catalyst::View::Templated - generic base class for template-based views
 View::Templated makes all (template-based) Catalyst views work the same way:
 
    # setup the config
-   MyApp::View::SomeEngine->config(TEMPLATE_EXTENSION => '.tmpl');
-   MyApp::View::SomeEngine->config(CATALYST_VAR       => 'c');
+   MyApp->config->{View::SomeEngine} 
+     = { TEMPLATE_EXTENSION => '.tmpl',
+         CATALYST_VAR       => 'c',
+         INCLUDE_PATH       => ['root', 'root/my_theme'], # defaults to root
+       };
  
    # set the template in your action
    $c->view('View::SomeEngine')->template('the_template_name');
@@ -30,8 +33,30 @@ View::Templated makes all (template-based) Catalyst views work the same way:
    $c->detach('View::Name');
    $c->view('View::Name')->process;
 
-
 =head1 METHODS
+
+=head2 new($c, $args)
+
+Called by Catalyst when creating the component.
+
+=cut
+
+sub new {
+    my $self = shift;
+    my ($c, $args) = @_;
+
+    # default INCLUDE_PATH
+    if (!$args->{INCLUDE_PATH}){
+        $args->{INCLUDE_PATH} = [$c->path_to('root')];
+    }
+    
+    # fixup INCLUDE_PATH if the user passes a scalar
+    if (ref $args->{INCLUDE_PATH} ne 'ARRAY') {
+        $args->{INCLUDE_PATH} = [$args->{INCLUDE_PATH}];
+    }
+
+    return $self->next::method($c, $args);
+}
 
 =head2 template([$template])
 

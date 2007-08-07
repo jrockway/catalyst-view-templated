@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 22;
 use Test::MockObject;
 use Storable qw/thaw/;
 
@@ -12,19 +12,25 @@ use ok 'TestApp::View::Something';
 
 my $stash = {something => 'here'};
 my $catalyst = Test::MockObject->new;
-my $args = { CATALYST_VAR => 'CatTest',
+$catalyst->set_always(path_to => 'a/path/root');
+
+my $args = { CATALYST_VAR       => 'CatTest',
              TEMPLATE_EXTENSION => '.ttFoo',
            };
 my $view = TestApp::View::Something->COMPONENT($catalyst, $args);
-my $body;
 
+is($view->{CATALYST_VAR}, 'CatTest');
+is($view->{TEMPLATE_EXTENSION}, '.ttFoo');
+is($view->{INCLUDE_PATH}->[0], 'a/path/root');
+
+$catalyst->{for} = 'testing';
 $catalyst->mock(stash => sub { 
                     if ($_[1]) { $stash->{$_[1]} = $_[2] };
                     return $stash;
                 });
 $catalyst->mock(view => sub { $view->ACCEPT_CONTEXT($_[0]) });
 $catalyst->set_always(action => 'test');
-$catalyst->{for} = 'testing';
+my $body;
 $catalyst->set_always(response => 
                       Test::MockObject->new->mock(body => 
                                                   sub { $body = $_[1] }));
@@ -74,6 +80,25 @@ is_deeply thaw($a), { template => { %$stash } }, 'correct data';
 
 # now try with a fresh view
 $view = TestApp::View::Something->COMPONENT($catalyst);
+is($view->{CATALYST_VAR}, undef, 'no cat var');
+is($view->{TEMPLATE_EXTENSION}, undef, 'no template_extension');
+is($view->{INCLUDE_PATH}->[0], 'a/path/root', 'default INCLUDE_PATH');
+
 $stash = { foo => 'bar' };
 my $e = $catalyst->view->render;
 is_deeply thaw($e), { test => $stash}, 'empty config still works';
+
+# try some INCLUDE_PATH special cases
+$args = { INCLUDE_PATH => [qw/one two three/] };
+$view = TestApp::View::Something->COMPONENT($catalyst, $args);
+is_deeply $view->{INCLUDE_PATH}, [qw/one two three/], 'list INCLUDE_PATH works';
+
+$args = { INCLUDE_PATH => 'a/scalar' };
+$view = TestApp::View::Something->COMPONENT($catalyst, $args);
+is_deeply $view->{INCLUDE_PATH}, ['a/scalar'], 'scalar INCLUDE_PATH works';
+
+use Path::Class;
+$args = { INCLUDE_PATH => file(qw/foo bar baz/) };
+$view = TestApp::View::Something->COMPONENT($catalyst, $args);
+is_deeply $view->{INCLUDE_PATH}, [q{}. file(qw/foo bar baz/)], 
+  'Path::Class INCLUDE_PATH works';
