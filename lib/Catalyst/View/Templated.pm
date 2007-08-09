@@ -104,6 +104,7 @@ sub process {
 
     my $output = $self->_do_render;
     $self->context->response->body($output);
+    return 1; # backcompat, ick
 }
 
 =head2 render([[$c], [$template, [$args]]])
@@ -154,9 +155,12 @@ sub _do_render {
     my $template = shift || $self->template;
     my $args     = shift;
     
-    my $stash    = $self->context->stash;
+    my $stash    = {%{$self->context->stash}}; # shallow copy
     my $catalyst = $self->{CATALYST_VAR} || 'c';
+    
     $stash->{$catalyst} = $self->context;
+    $stash->{base} ||= $self->context->request->base;
+    $stash->{name} ||= $self->context->config->{name};
     
     return $self->_render($template, $stash, $args);
 }
@@ -168,8 +172,8 @@ C<_render> method that accepts a template name, a hashref of
 paramaters, and a hashref of arguments (optional, passed to C<render>
 by the user), and returns the rendered template.  This class will
 handle converting the stash to a hashref for you, so you don't need to
-worry about getting the context, base, req, res, etc.  Just render
-with what you're given.
+worry about munging it to get the context, base, or name.  Just render
+with what you're given.  It's what the user wants.
 
 Example:
 
@@ -180,7 +184,7 @@ Example:
       my ($class, $c, $args) = @_;
       my $self = $class->next::method($c, $args);
   
-      $self->{engine} = MyTempalate->new($args);
+      $self->{engine} = MyTemplate->new($args);
       return $self;
    }
 
