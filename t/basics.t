@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 22;
+use Test::More tests => 23;
 use Test::MockObject;
 use Storable qw/thaw/;
 
@@ -79,6 +79,11 @@ $stash = { foo => 'bar' };
 my $e = $catalyst->view->render;
 is_deeply thaw($e), { test => {%$stash, @STASH_EXTRAS, c => $catalyst} }, 
   'empty config still works';
+
+$stash = { foo => 'bar', base => 'baz', name => 'heheh' };
+$e = $catalyst->view->render;
+is_deeply thaw($e), { test => {%$stash, c => $catalyst} }, 
+  'can override base and name';
 
 # try some INCLUDE_PATH special cases
 $args = { INCLUDE_PATH => [qw/one two three/] };
