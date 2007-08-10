@@ -2,6 +2,7 @@ package Catalyst::View::Templated;
 use strict;
 use warnings;
 use Class::C3;
+use Path::Class;
 
 use base qw/Catalyst::Component::ACCEPT_CONTEXT Catalyst::View/;
 
@@ -42,6 +43,18 @@ Called by Catalyst when creating the component.
 
 =cut
 
+sub _coerce_paths {
+    my ( $paths, $dlim ) = shift;
+    return () if ( !$paths );
+    return @{$paths} if ( ref $paths eq 'ARRAY' );
+
+    # tweak delim to ignore C:/
+    unless ( defined $dlim ) {
+        $dlim = ( $^O eq 'MSWin32' ) ? ':(?!\\/)' : ':';
+    }
+    return split( /$dlim/, $paths );
+}
+
 sub new {
     my $self = shift;
     my ($c, $args) = @_;
@@ -51,6 +64,19 @@ sub new {
     # default INCLUDE_PATH
     if (!$args->{INCLUDE_PATH}){
         $args->{INCLUDE_PATH} = [$c->path_to('root')];
+    }
+    
+    # XXX: stolen from old View::TT ... very legacy
+    if (ref $args->{INCLUDE_PATH} ne 'ARRAY' && $args->{DELIMITER}) {
+        my $delim = $args->{DELIMITER};
+        my @include_path
+          = _coerce_paths( $self->{INCLUDE_PATH}, $delim );
+        if ( !@include_path ) {
+            my $root = $c->config->{root};
+            my $base = Path::Class::dir( $root, 'base' );
+            @include_path = ( "$root", "$base" );
+        }
+        $self->{INCLUDE_PATH} = \@include_path;
     }
     
     # fixup INCLUDE_PATH if the user passes a scalar

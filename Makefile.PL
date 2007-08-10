@@ -6,6 +6,7 @@ use warnings;
 all_from('lib/Catalyst/View/Templated.pm');
 name('Catalyst-View-Templated');
 
+requires 'Path::Class'; # included with Catalyst though
 requires 'Catalyst::Component::ACCEPT_CONTEXT' => 0.03;
 
 build_requires 'Catalyst' => '5.7001';
