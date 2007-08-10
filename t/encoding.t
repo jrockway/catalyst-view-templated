@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Test::MockObject;
 use Storable qw/thaw/;
 
@@ -23,3 +23,9 @@ $stash = { not_unicode => 'foo bar baz' };
 $view->process;
 ok !utf8::is_utf8($body), 'output is not utf8';
 like $content_type, qr/charset=iso-8859-1/, 'is iso-8859-1';
+
+$view = TestApp::View::Raw->COMPONENT($catalyst,
+                                      { CONTENT_TYPE => 'text/plain' }
+                                     );
+$view->process;
+is $content_type, 'text/plain; charset=iso-8859-1', 'is iso-8859-1';

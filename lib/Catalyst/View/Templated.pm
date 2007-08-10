@@ -20,6 +20,7 @@ View::Templated makes all (template-based) Catalyst views work the same way:
      = { TEMPLATE_EXTENSION => '.tmpl',
          CATALYST_VAR       => 'c',
          INCLUDE_PATH       => ['root', 'root/my_theme'], # defaults to root
+         CONTENT_TYPE       => 'application/xhtml+xml', # defaults to text/html
        };
  
    # set the template in your action
@@ -44,6 +45,8 @@ Called by Catalyst when creating the component.
 sub new {
     my $self = shift;
     my ($c, $args) = @_;
+
+    $args->{CONTENT_TYPE} ||= 'text/html';
 
     # default INCLUDE_PATH
     if (!$args->{INCLUDE_PATH}){
@@ -109,10 +112,11 @@ sub process {
     my $output = $self->_do_render;
 
     unless ( $self->context->response->content_type ) {
+        my $ct      = $self->{CONTENT_TYPE};
         my $charset = 'iso-8859-1';
         $charset = 'utf-8' if utf8::is_utf8($output);
         
-        $self->context->response->content_type("text/html; charset=$charset");
+        $self->context->response->content_type("$ct; charset=$charset");
     }
     
     $self->context->response->body($output);
