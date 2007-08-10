@@ -96,6 +96,10 @@ Called by Catalyst to render a template.  Renders the template
 returned by C<< $self->template >> and sets the response body to the
 result of the template evaluation.
 
+Also sets up a content-type header for text/html with the charset of
+the data (utf8 if the data contains utf8 characters, iso-8859-1
+otherwise).
+
 =cut
 
 sub process {
@@ -103,7 +107,16 @@ sub process {
     # c is also passed, but we don't care anymore
 
     my $output = $self->_do_render;
+
+    unless ( $self->context->response->content_type ) {
+        my $charset = 'iso-8859-1';
+        $charset = 'utf-8' if utf8::is_utf8($output);
+        
+        $self->context->response->content_type("text/html; charset=$charset");
+    }
+    
     $self->context->response->body($output);
+
     return 1; # backcompat, ick
 }
 
@@ -155,7 +168,7 @@ sub _do_render {
     my $template = shift || $self->template;
     my $args     = shift;
     
-    my $stash    = {%{$self->context->stash}}; # shallow copy
+    my $stash    = {%{$self->context->stash}};
     my $catalyst = $self->{CATALYST_VAR} || 'c';
     
     $stash->{$catalyst} = $self->context;

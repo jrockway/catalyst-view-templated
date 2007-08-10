@@ -10,6 +10,8 @@ sub _render {
     my $template = shift;
     my $stash = shift;
     
+    $self->context->response->content_type('application/octet-stream');
+    
     return freeze({ $template => $stash });
 }
 
