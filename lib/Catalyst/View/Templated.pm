@@ -109,8 +109,11 @@ sub process {
     my $self = shift;
     # c is also passed, but we don't care anymore
 
-    my $output = $self->_do_render;
-
+    my $template = $self->template;
+    $self->context->log->debug(qq/Processing template "$template"/) 
+      if $self->context->debug;
+    my $output = $self->_do_render($template);
+    
     unless ( $self->context->response->content_type ) {
         my $ct      = $self->{CONTENT_TYPE};
         my $charset = 'iso-8859-1';
@@ -120,7 +123,7 @@ sub process {
     }
     
     $self->context->response->body($output);
-
+    
     return 1; # backcompat, ick
 }
 
@@ -164,6 +167,9 @@ sub render {
         ($template, $args) = @_;
     }
 
+    $self->context->log->debug(qq/Rendering template "$template"/) 
+      if $self->context->debug;
+    
     return $self->_do_render($template, $args);
 }
 

@@ -30,6 +30,8 @@ sub mk_catalyst {
     $catalyst->set_always(config => { name => 'TestApp' });
     $catalyst->set_always(request => Test::MockObject->new->
                                       set_always(base => 'base'));
+    $catalyst->set_always(debug => 0);
+    $catalyst->set_always(log => Test::MockObject->new->set_always(debug => 0));
     return $catalyst;
 }
 
