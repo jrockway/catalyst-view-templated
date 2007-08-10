@@ -184,7 +184,7 @@ Example:
       my ($class, $c, $args) = @_;
       my $self = $class->next::method($c, $args);
   
-      $self->{engine} = MyTemplate->new($args);
+      $self->{engine} = MyTemplate->new(include => $self->{INCLUDE_PATH});
       return $self;
    }
 
@@ -198,6 +198,19 @@ Example:
 Now your View will work exactly like every other Catalyst View.  All
 you have to worry about is sending a hashref into a template and
 returning the result.  Easy!
+
+=head2 VARIABLES FOR YOU
+
+=over 4
+
+=item $self->{INCLUDE_PATH}
+
+An array ref containing the user's desired include paths.  Set to a
+reasonable default (C<root/>) if the user omits it from his config.
+
+=back
+
+=back
 
 =head1 AUTHOR
 
