@@ -245,7 +245,7 @@ Returning false from C<_render> is not an error.  If something bad
 happens, throw an exception.  The error will automatically be handled
 appropriately; all you need to do is die with an informative message.
 
-The message shown to the user it:
+The message shown to the user is:
 
    Couldn't render template '$template': $@
 
