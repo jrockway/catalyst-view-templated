@@ -222,8 +222,19 @@ Now your View will work exactly like every other Catalyst View.  All
 you have to worry about is sending a hashref into a template and
 returning the result.  Easy!
 
-I<Note:> We're using L<Class::C3|Class::C3> instead of L<NEXT|NEXT>.
+=over 4
+
+=item 
+
+We're using L<Class::C3|Class::C3> instead of L<NEXT|NEXT>.
 Don't use NEXT anymore.
+
+=item
+
+Returning false from C<_render> is not an error.  If something bad
+happens, throw an exception.
+
+=back 
 
 =head2 VARIABLES FOR YOU
 
