@@ -57,6 +57,8 @@ sub new {
     if (ref $args->{INCLUDE_PATH} ne 'ARRAY') {
         $args->{INCLUDE_PATH} = [$args->{INCLUDE_PATH}];
     }
+
+    $args->{CATALYST_VAR} ||= 'c';
     
     return $self->next::method($c, $args);
 }
@@ -179,7 +181,7 @@ sub _do_render {
     my $args     = shift;
     
     my $stash    = {%{$self->context->stash}};
-    my $catalyst = $self->{CATALYST_VAR} || 'c';
+    my $catalyst = $self->{CATALYST_VAR};
     
     $stash->{$catalyst} = $self->context;
     $stash->{base} ||= $self->context->request->base;

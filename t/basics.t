@@ -71,7 +71,7 @@ is_deeply thaw($a), { template =>
 
 # now try with a fresh view
 $view = TestApp::View::Something->COMPONENT($catalyst);
-is($view->{CATALYST_VAR}, undef, 'no cat var');
+is($view->{CATALYST_VAR}, 'c', 'cat var is c by default');
 is($view->{TEMPLATE_EXTENSION}, undef, 'no template_extension');
 is($view->{INCLUDE_PATH}->[0], 'a/path/root', 'default INCLUDE_PATH');
 
