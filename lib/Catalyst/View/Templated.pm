@@ -222,16 +222,18 @@ Now your View will work exactly like every other Catalyst View.  All
 you have to worry about is sending a hashref into a template and
 returning the result.  Easy!
 
+I<Note:> We're using L<Class::C3|Class::C3> instead of L<NEXT|NEXT>.
+Don't use NEXT anymore.
+
 =head2 VARIABLES FOR YOU
 
 =over 4
 
 =item $self->{INCLUDE_PATH}
 
-An array ref containing the user's desired include paths.  Set to a
-reasonable default (C<root/>) if the user omits it from his config.
-
-=back
+An array ref containing the user's desired include paths.  This is set
+to a reasonable default (C<root/>) if the user omits it from his
+config.
 
 =back
 
