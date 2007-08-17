@@ -192,7 +192,6 @@ sub _do_render {
     if ($@) {
         my $error = "Couldn't render template '$template': $@";
         $self->context->error($error);
-        die $error;
     }
 
     return $output;
