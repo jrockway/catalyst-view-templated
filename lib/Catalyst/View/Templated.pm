@@ -185,7 +185,17 @@ sub _do_render {
     $stash->{base} ||= $self->context->request->base;
     $stash->{name} ||= $self->context->config->{name};
     
-    return $self->_render($template, $stash, $args);
+    my $output = eval {
+        $self->_render($template, $stash, $args);
+    };
+    
+    if ($@) {
+        my $error = "Couldn't render template '$template': $@";
+        $self->context->error($error);
+        die $error;
+    }
+
+    return $output;
 }
 
 =head1 IMPLEMENTING A SUBCLASS
@@ -232,7 +242,14 @@ Don't use NEXT anymore.
 =item
 
 Returning false from C<_render> is not an error.  If something bad
-happens, throw an exception.
+happens, throw an exception.  The error will automatically be handled
+appropriately; all you need to do is die with an informative message.
+
+The message shown to the user it:
+
+   Couldn't render template '$template': $@
+
+C<$@> is whatever you invoked C<die> against.
 
 =back 
 
