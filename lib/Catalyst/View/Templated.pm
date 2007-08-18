@@ -5,7 +5,7 @@ use Class::C3;
 
 use base qw/Catalyst::Component::ACCEPT_CONTEXT Catalyst::View/;
 
-our $VERSION = '0.00_00'; # beta!
+our $VERSION = '0.01'; # beta!
 
 =head1 NAME
 
@@ -28,7 +28,7 @@ View::Templated makes all (template-based) Catalyst views work the same way:
    # or let it guess the template name from the action name and EXTENSION
 
    # capture the text of the template
-   my $output = $c->view('View::Engine')->render;
+   my $output = $c->view('View::SomeEngine')->render;
 
    # process a template (in an end action)
    $c->detach('View::Name');
