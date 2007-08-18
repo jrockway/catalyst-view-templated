@@ -92,7 +92,7 @@ sub template {
 }
 
 sub _ident { # secret stash key for this template'
-    return '_'. ref($_[0]). '_template';
+    return '__'. ref($_[0]). '_template';
 }
 
 =head2 process
