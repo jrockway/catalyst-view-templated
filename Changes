@@ -1,4 +1,8 @@
 Revision history for Catalyst::View::Templated
 
+0.01    18 Aug 2007
+        - first CPAN release
+        - still experimental, so don't get upset if it changes
+
 0.00_00 6 Aug 2007
         - first crack at it
