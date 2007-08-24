@@ -3,7 +3,6 @@ use strict;
 use warnings;
 use Test::MockObject;
 use base 'Exporter';
-use Data::Alias;
 
 our @EXPORT = qw/mk_catalyst mk_view $stash $view $body $content_type/;
 our $stash;

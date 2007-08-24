@@ -5,7 +5,7 @@ use Class::C3;
 
 use base qw/Catalyst::Component::ACCEPT_CONTEXT Catalyst::View/;
 
-our $VERSION = '0.01'; # beta!
+our $VERSION = '0.02'; # beta!
 
 =head1 NAME
 

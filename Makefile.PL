@@ -8,6 +8,7 @@ name('Catalyst-View-Templated');
 
 requires 'Path::Class'; # included with Catalyst though
 requires 'Catalyst::Component::ACCEPT_CONTEXT' => 0.03;
+requires 'Class::C3';
 
 build_requires 'Catalyst' => '5.7001';
 build_requires 'Test::More';
