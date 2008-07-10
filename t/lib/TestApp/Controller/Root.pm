@@ -21,4 +21,9 @@ sub action_detach :Local {
     $c->detach($c->view('View::Something'));
 }
 
+sub local_config :Local {
+    my ($self, $c) = @_;
+    $c->detach($c->view('LocalConfig'));
+}
+
 1;

@@ -46,21 +46,23 @@ sub new {
     my $self = shift;
     my ($c, $args) = @_;
     
-    $args->{CONTENT_TYPE} ||= 'text/html';
+    $self = $self->next::method($c, $args);
+    
+    $self->{CONTENT_TYPE} ||= 'text/html';
     
     # default INCLUDE_PATH
-    if (!$args->{INCLUDE_PATH}){
-        $args->{INCLUDE_PATH} = [$c->path_to('root')];
+    if (!$self->{INCLUDE_PATH}){
+        $self->{INCLUDE_PATH} = [$c->path_to('root')];
     }
     
     # fixup INCLUDE_PATH if the user passes a scalar
-    if (ref $args->{INCLUDE_PATH} ne 'ARRAY') {
-        $args->{INCLUDE_PATH} = [$args->{INCLUDE_PATH}];
+    if (ref $self->{INCLUDE_PATH} ne 'ARRAY') {
+        $self->{INCLUDE_PATH} = [$self->{INCLUDE_PATH}];
     }
 
-    $args->{CATALYST_VAR} ||= 'c';
+    $self->{CATALYST_VAR} ||= 'c';
     
-    return $self->next::method($c, $args);
+    return $self;
 }
 
 =head2 template([$template])
