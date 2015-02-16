@@ -9,16 +9,16 @@ __PACKAGE__->config(namespace => q{});
 sub template_detach :Local {
     my ($self, $c) = @_;
     
-    $c->view('View::Something')->template('hello_world');
+    $c->view('Something')->template('hello_world');
     $c->stash(hello => 'world');
     
-    $c->detach($c->view('View::Something'));
+    $c->detach($c->view('Something'));
 }
 
 sub action_detach :Local {
     my ($self, $c) = @_;
     $c->stash(action => 'detach');    
-    $c->detach($c->view('View::Something'));
+    $c->detach($c->view('Something'));
 }
 
 sub local_config :Local {
