@@ -11,6 +11,8 @@ use lib "$Bin/lib";
 use ok 'TestApp::View::Something';
 use MockCatalyst;
 
+local $Storable::canonical = 1;
+
 my @STASH_EXTRAS = (base => 'base', name => 'TestApp');
 
 $stash = {something => 'here'};
